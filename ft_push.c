@@ -1,28 +1,47 @@
 #include "push_swap.h"
-static void	ft_push_a(int *array_a, int *array_b);
+static t_arr	ft_push_a(t_arr arr);
 
-static void	ft_push_b(int *array_a, int *array_b);
+static t_arr	ft_push_b(t_arr arr);
 
-void	ft_push(int *array_a, int *array_b, char operation)
+t_arr	ft_push(t_arr arr, char operation)
 {
 	if (operation == 'a')
-		ft_push_a(array_a, array_b);
+		arr = ft_push_a(arr);
 	if (operation == 'b')
-		ft_push_b(array_a, array_b);
+		arr = ft_push_b(arr);
+	return (arr);
 }
 
-static void	ft_push_a(int *array_a, int *array_b)
+static t_arr	ft_push_a(t_arr arr)
 {
-	if (!array_b || !*array_b)
-		return ;
-	array_a[0] = array_b[0];
+	t_list	*new;
+	int		*num;
+
+	if (!arr.array_b || !arr.array_b->content)
+		return (arr);
+	num = malloc(sizeof(int));
+	*num = *((int *)arr.array_b->content);
+	new = ft_lstnew(num);
+	ft_lstadd_front(&arr.array_a, new);
+	ft_lstdelone(arr.array_b, &ft_delete);
+	arr.array_b = arr.array_b->next;
 	write(1, "pa\n", 3);
+	return (arr);
 }
 
-static void	ft_push_b(int *array_a, int *array_b)
+static t_arr	ft_push_b(t_arr arr)
 {
-	if (!array_a || !*array_b)
-		return ;
-	array_b[0] = array_a[0];
-	write(1, "pa\n", 3);
+	t_list	*new;
+	int		*num;
+
+	if (!arr.array_a || !arr.array_a->content)
+		return (arr);
+	num = malloc(sizeof(int));
+	*num = *((int *)arr.array_a->content);
+	new = ft_lstnew(num);
+	ft_lstadd_front(&arr.array_b, new);
+	ft_lstdelone(arr.array_a, &ft_delete);
+	arr.array_a = arr.array_a->next;
+	write(1, "pb\n", 3);
+	return (arr);
 }

@@ -1,27 +1,27 @@
 NAME = push_swap
 
-FLAGS = -Wall -Werror -Wextra
-
 CC = gcc
-
-OBJS = $(FILES:.c=.o)
+CFLAGS = -Wall -Wextra -Werror
+COMPILE = $(CC) $(CFLAGS)
+ARCHIVE = ./Libft/libft.a
+ARCHIVE_DIR = ./Libft
 
 FILES =	ft_push_swap.c\
 		ft_swap.c\
 		ft_push.c\
+		ft_rotate.c\
+		ft_reverse.c\
+		ft_delete.c\
+		three_long.c\
+		five_long.c\
 
-%.o : %.c
-		@$(CC) $(FLAGS) -c $<
-		@echo "Compiling $<"
+OBJS = $(FILES:.c=.o)
 
-$(NAME): $(OBJS)
-	@$(MAKE) bonus -C ./Libft
-	@echo "Compiling library"
-	@ar -cr $(NAME) $(OBJS)
-	@echo "Creating archive file"
+$(NAME): libft $(OBJS)
+	@$(COMPILE) $(ARCHIVE) -I $(ARCHIVE_DIR) $(OBJS) -o $(NAME)
+	@echo "Creating executable file"
 
-all: $(NAME)
-	chmod 700 push_swap
+all: libft $(NAME)
 
 clean:
 	@rm -rf $(OBJS)
@@ -30,9 +30,12 @@ clean:
 
 fclean: clean
 	@rm -f $(NAME)
-	@echo "Removing archive file"
-	@$(MAKE) fclean -C ./Libft
+	@echo "Removing executable file"
+	@$(MAKE) fclean -C ./Libft/
+
+libft:
+	@$(MAKE) -C ./Libft/ bonus
 
 re: fclean | all
 
-.PHONY: all clean fclean re test
+.PHONY: all clean fclean re libft
