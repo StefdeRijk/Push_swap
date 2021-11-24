@@ -1,11 +1,10 @@
 #include "push_swap.h"
+#include <stdio.h>
 static t_arr	ft_reverse_a(t_arr arr, int print);
 
 static t_arr	ft_reverse_b(t_arr arr, int print);
 
 static t_arr	ft_reverse_both(t_arr arr);
-
-static t_list	*ft_rotate_list(t_list *array);
 
 t_arr	ft_reverse(t_arr arr, char operation)
 {
@@ -20,16 +19,28 @@ t_arr	ft_reverse(t_arr arr, char operation)
 
 static t_arr	ft_reverse_a(t_arr arr, int print)
 {
-	int	len;
+	t_list	*copy;
+	t_list	*copy_next;
+	t_list	*new;
+	int		*num;
 
 	if (!arr.array_a)
 		return (arr);
-	len = ft_lstsize(arr.array_a) - 1;
-	while (len > 0)
+	copy = arr.array_a;
+	copy_next = (t_list *)malloc(sizeof(t_list *));
+	copy_next = arr.array_a->next;
+	while (copy_next->next)
 	{
-		arr.array_a = ft_rotate_list(arr.array_a);
-		len--;
+		copy = copy->next;
+		copy_next = copy_next->next;
 	}
+	num = malloc(sizeof(int));
+	*num = *((int *)copy_next->content);
+	new = ft_lstnew(num);
+	ft_lstadd_front(&arr.array_a, new);
+	ft_lstdelone(copy_next, &ft_delete);
+	copy->next = NULL;
+	arr = is_min(arr);
 	if (print == 1)
 		write(1, "rra\n", 4);
 	return (arr);
@@ -37,16 +48,29 @@ static t_arr	ft_reverse_a(t_arr arr, int print)
 
 static t_arr	ft_reverse_b(t_arr arr, int print)
 {
-	int	len;
+	t_list	*copy;
+	t_list	*copy_next;
+	t_list	*new;
+	int		*num;
 
 	if (!arr.array_b)
 		return (arr);
-	len = ft_lstsize(arr.array_b) - 1;
-	while (len > 0)
+	copy = arr.array_b;
+	copy_next = (t_list *)malloc(sizeof(t_list *));
+	copy_next = arr.array_b->next;
+	while (copy_next->next)
 	{
-		arr.array_b = ft_rotate_list(arr.array_b);
-		len--;
+		copy = copy->next;
+		copy_next = copy_next->next;
+		printf("%i\n\n", *((int *)copy_next->content));
 	}
+	num = malloc(sizeof(int));
+	*num = *((int *)copy_next->content);
+	new = ft_lstnew(num);
+	ft_lstadd_front(&arr.array_b, new);
+	ft_lstdelone(copy_next, &ft_delete);
+	copy->next = NULL;
+	arr = is_min(arr);
 	if (print == 1)
 		write(1, "rrb\n", 4);
 	return (arr);
@@ -62,29 +86,4 @@ static t_arr	ft_reverse_both(t_arr arr)
 		arr = ft_reverse_b(arr, 0);
 	write(1, "rrr\n", 4);
 	return (arr);
-}
-
-static t_list	*ft_rotate_list(t_list *array)
-{
-	t_list	*copy;
-	t_list	*new;
-	int		*num;
-	int		len;
-
-	if (!array && !array->next)
-		return (array);
-	len = ft_lstsize(array);
-	if (len == 1)
-		return (array);
-	copy = (t_list *)malloc(sizeof(t_list *));
-	num = malloc(sizeof(int));
-	if (!num || !copy)
-		return (array);
-	copy = array;
-	array = array->next;
-	*num = *((int *)copy->content);
-	new = ft_lstnew(num);
-	ft_lstadd_back(&array, new);
-	ft_lstdelone(copy, &ft_delete);
-	return (array);
 }

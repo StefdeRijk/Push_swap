@@ -4,7 +4,9 @@ static t_arr	ft_algorithm(t_arr arr);
 
 static t_arr	ft_init_array(t_arr arr, char *argv);
 
-static int		is_sorted(t_arr arr);
+void			ft_iter(void *content);
+
+int				is_sorted(t_arr arr);
 
 static t_list	*is_max(t_arr arr);
 
@@ -12,10 +14,10 @@ int	main(int argc, char **argv)
 {
 	t_arr	arr;
 	int		arguments;
-	int		i;
 
 	arguments = argc - 1;
-	arr.array_b = NULL;
+	arr.array_a = 0;
+	arr.array_b = 0;
 	if (argc <= 1 || !argv)
 		return (0);
 	while (arguments > 0)
@@ -24,40 +26,19 @@ int	main(int argc, char **argv)
 		arguments--;
 	}
 	arr = ft_algorithm(arr);
-	write(1, "\n", 1);
-	i = 5;
-	while (i > 0)
-	{
-		if (arr.array_a != NULL)
-		{
-			if (*((int *)arr.array_a->content))
-			{
-				printf("%i	", *((int *)arr.array_a->content));
-				arr.array_a = arr.array_a->next;
-			}
-			else
-			{
-				arr.array_a = arr.array_a->next;
-				if (*((int *)arr.array_a->content))
-				{
-					printf("%i	", *((int *)arr.array_a->content));
-					arr.array_a = arr.array_a->next;
-				}
-			}
-		}
-		if (arr.array_b != NULL)
-		{
-			if (*((int *)arr.array_b->content))
-			{
-				printf("%i", *((int *)arr.array_b->content));
-				arr.array_b = arr.array_b->next;
-			}
-		}
-		printf("\n");
-		i--;
-	}
+	// write(1, "\n", 1);
+	// ft_lstiter(arr.array_a, &ft_iter);
+	// ft_lstiter(arr.array_b, &ft_iter);
 	return (0);
 }
+
+// void	ft_iter(void *content)
+// {
+// 	int	*i;
+
+// 	i = content;
+// 	printf("%i\n", *i);
+// }
 
 static t_arr	ft_init_array(t_arr arr, char *argv)
 {
@@ -80,10 +61,12 @@ static t_arr	ft_algorithm(t_arr arr)
 	if (is_sorted(arr) == 0)
 	{
 		arr.max = is_max(arr);
-		if (ft_lstsize(arr.array_a) == 3)
-			return (ft_len_three(arr));
-		if (ft_lstsize(arr.array_a) == 5)
-			return (ft_len_five(arr));
+		if (ft_lstsize(arr.array_a) <= 3)
+			return (ft_len_three(arr, ft_lstsize(arr.array_a)));
+		if (ft_lstsize(arr.array_a) <= 5)
+			return (ft_len_five(arr, ft_lstsize(arr.array_a)));
+		// else
+		// 	return (ft_len_long(arr));
 	}
 	return (arr);
 }
@@ -104,7 +87,7 @@ static t_list	*is_max(t_arr arr)
 	return (max);
 }
 
-static int	is_sorted(t_arr arr)
+int	is_sorted(t_arr arr)
 {
 	t_list	*copy;
 	t_list	*next_elem;

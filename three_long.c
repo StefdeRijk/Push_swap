@@ -1,13 +1,19 @@
 #include "push_swap.h"
 static t_arr	ft_sort_three(t_arr arr, int first, int second, int third);
 
-t_arr	ft_len_three(t_arr arr)
+static t_arr	ft_sort_two(t_arr arr);
+
+t_arr	ft_len_three(t_arr arr, int size)
 {
 	t_list	*copy;
 	int		first;
 	int		second;
 	int		third;
 
+	if (size == 1)
+		return (arr);
+	if (size == 2)
+		return (ft_sort_two(arr));
 	copy = arr.array_a;
 	first = *((int *)copy->content);
 	copy = copy->next;
@@ -18,9 +24,21 @@ t_arr	ft_len_three(t_arr arr)
 	return (arr);
 }
 
+static t_arr	ft_sort_two(t_arr arr)
+{
+	t_list	*next;
+
+	next = arr.array_a->next;
+	if (*((int *)arr.array_a->content) > *((int *)next->content))
+		arr = ft_swap(arr, 'a');
+	return (arr);
+}
+
 static t_arr	ft_sort_three(t_arr arr, int first, int second, int third)
 {
-	if (third > first && first > second)
+	if (third > second && second > first)
+		return (arr);
+	else if (third > first && first > second)
 		arr = ft_swap(arr, 'a');
 	else if (first > third && third > second)
 		arr = ft_rotate(arr, 'a');
