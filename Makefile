@@ -14,6 +14,8 @@ FILES =	ft_push_swap.c\
 		ft_delete.c\
 		three_long.c\
 		five_long.c\
+		utils.c\
+		radix.c\
 
 OBJS = $(FILES:.c=.o)
 

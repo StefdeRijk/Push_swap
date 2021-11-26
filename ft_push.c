@@ -1,4 +1,5 @@
 #include "push_swap.h"
+#include <stdio.h>
 static t_arr	ft_push_a(t_arr arr);
 
 static t_arr	ft_push_b(t_arr arr);
@@ -34,7 +35,7 @@ static t_arr	ft_push_b(t_arr arr)
 	t_list	*new;
 	int		*num;
 
-	if (!arr.array_a || !arr.array_a->content)
+	if (!arr.array_a)
 		return (arr);
 	num = malloc(sizeof(int));
 	*num = *((int *)arr.array_a->content);

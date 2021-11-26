@@ -18,16 +18,25 @@ t_arr	ft_swap(t_arr arr, char operation)
 
 static t_list	*ft_swap_a(t_list *array_a, int print)
 {
-	int		*temp;
-	t_list	*temp_list;
+	t_list	*copy;
+	t_list	*copy_before;
+	t_list	*new;
+	int		*num;
 
 	if (!array_a)
 		return (array_a);
-	temp_list = array_a;
-	temp = array_a->content;
-	temp_list = temp_list->next;
-	array_a->content = temp_list->content;
-	temp_list->content = temp;
+	copy = (t_list *)malloc(sizeof(t_list *));
+	num = malloc(sizeof(int));
+	if (!copy || ! num)
+		return (array_a);
+	copy = array_a->next;
+	copy_before = array_a;
+	*num = *((int *)copy->content);
+	new = ft_lstnew(num);
+	ft_lstadd_front(&array_a, new);
+	ft_lstdelone(copy, &ft_delete);
+	copy = copy->next;
+	copy_before->next = copy;
 	if (print == 1)
 		write(1, "sa\n", 3);
 	return (array_a);

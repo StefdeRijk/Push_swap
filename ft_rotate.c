@@ -28,7 +28,7 @@ static t_arr	ft_rotate_a(t_arr arr, int print)
 	len = ft_lstsize(arr.array_a);
 	copy = (t_list *)malloc(sizeof(t_list *));
 	num = malloc(sizeof(int));
-	if (len == 1 || !copy || ! num)
+	if (len == 1 || !copy || !num)
 		return (arr);
 	copy = arr.array_a;
 	arr.array_a = arr.array_a->next;
