@@ -19,11 +19,11 @@ OBJS = $(FILES:.c=.o)
 %.o : %.c push_swap.h
 	@$(CC) $(CFLAGS) -c $<
 
+all: libft | $(NAME)
+
 $(NAME): ./Libft/libft.a $(OBJS)
 	@$(COMPILE) $(ARCHIVE) $(OBJS) -o $(NAME)
 	@echo "Creating executable"
-
-all: libft | $(NAME)
 
 clean:
 	@rm -rf $(OBJS)
