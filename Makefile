@@ -4,26 +4,26 @@ CC = gcc
 CFLAGS = -Wall -Wextra -Werror
 COMPILE = $(CC) $(CFLAGS)
 ARCHIVE = ./Libft/libft.a
-ARCHIVE_DIR = ./Libft
 
-FILES =	ft_push_swap.c\
-		ft_swap.c\
-		ft_push.c\
-		ft_rotate.c\
-		ft_reverse.c\
-		ft_delete.c\
+FILES =	main.c\
+		checks.c\
 		three_long.c\
 		five_long.c\
-		utils.c\
 		radix.c\
+		moves.c\
+		utils.c\
+		error.c\
 
 OBJS = $(FILES:.c=.o)
 
-$(NAME): libft $(OBJS)
-	@$(COMPILE) $(ARCHIVE) -I $(ARCHIVE_DIR) $(OBJS) -o $(NAME)
-	@echo "Creating executable file"
+%.o : %.c push_swap.h
+	@$(CC) $(CFLAGS) -c $<
 
-all: libft $(NAME)
+$(NAME): ./Libft/libft.a $(OBJS)
+	@$(COMPILE) $(ARCHIVE) $(OBJS) -o $(NAME)
+	@echo "Creating executable"
+
+all: libft | $(NAME)
 
 clean:
 	@rm -rf $(OBJS)
@@ -36,8 +36,8 @@ fclean: clean
 	@$(MAKE) fclean -C ./Libft/
 
 libft:
-	@$(MAKE) -C ./Libft/ bonus
+	@$(MAKE) bonus -C ./Libft/
 
 re: fclean | all
 
-.PHONY: all clean fclean re libft
+.PHONY: all clean fclean libft re

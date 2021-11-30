@@ -1,95 +1,85 @@
 #include "push_swap.h"
-#include <stdio.h>
 static t_arr	ft_sorting(t_arr arr);
 
 t_arr			is_min(t_arr arr);
 
 static int		check_swap(t_arr arr, int size);
 
-static int		check_return(t_arr arr, int second, int third, int fourth);
-
 t_arr	ft_len_five(t_arr arr, int size)
 {
-	if (is_sorted(arr) == 0)
+	if (check_swap(arr, size) == 0)
 	{
-		if (check_swap(arr, size) == 0)
-			return (ft_swap(arr, 'a'));
-		arr.size = ft_lstsize(arr.array_a);
-		arr = is_min(arr);
-		arr = ft_sorting(arr);
-		arr.size = ft_lstsize(arr.array_a);
-		arr = is_min(arr);
-		if (size == 5)
-			arr = ft_sorting(arr);
-		arr = ft_len_three(arr, 3);
-		arr = ft_push(arr, 'a');
-		arr = ft_push(arr, 'a');
+		arr = ft_swap_a(arr);
+		return (arr);
 	}
+	arr = is_min(arr);
+	arr = ft_sorting(arr);
+	arr = is_min(arr);
+	if (size == 5)
+		arr = ft_sorting(arr);
+	arr = ft_len_three(arr, 3);
+	arr = ft_push_a(arr);
+	arr = ft_push_a(arr);
 	return (arr);
 }
 
 static int	check_swap(t_arr arr, int size)
 {
-	t_list	*copy;
 	int		second;
 	int		third;
 	int		fourth;
 	int		fifth;
 
-	copy = arr.array_a;
-	copy = copy->next;
-	second = *((int *)copy->content);
-	copy = copy->next;
-	third = *((int *)copy->content);
-	copy = copy->next;
-	fourth = *((int *)copy->content);
-	copy = copy->next;
+	second = arr.array_a[1];
+	third = arr.array_a[2];
+	fourth = arr.array_a[3];
 	if (size == 5)
-		fifth = *((int *)copy->content);
-	else
-		return (check_return(arr, second, third, fourth));
-	if (*((int *)arr.array_a->content) > second && \
-	third < fourth && *((int *)arr.array_a->content) < third && fourth < fifth)
+		fifth = arr.array_a[4];
+	else if (arr.array_a[0] > second && \
+	third < fourth && arr.array_a[0] < third)
 		return (0);
-	return (1);
-}
-
-static int	check_return(t_arr arr, int second, int third, int fourth)
-{
-	if (*((int *)arr.array_a->content) > second && \
-	third < fourth && *((int *)arr.array_a->content) < third)
+	if (arr.array_a[0] > second && \
+	third < fourth && arr.array_a[0] < third && fourth < fifth)
 		return (0);
 	return (1);
 }
 
 static t_arr	ft_sorting(t_arr arr)
 {
-	while (ft_lstsize(arr.array_a) == arr.size)
+	int	i;
+
+	i = 0;
+	while (i < arr.size_a)
 	{
-		if (ft_lstsize(arr.min) == ft_lstsize(arr.array_a))
-			arr = ft_push(arr, 'b');
-		else if (ft_lstsize(arr.min) > (ft_lstsize(arr.array_a) / 2))
-			arr = ft_rotate(arr, 'a');
+		if (arr.array_a[0] == arr.min)
+		{
+			arr = ft_push_b(arr);
+			return (arr);
+		}
+		else if (arr.min_pos < (arr.size / 2))
+			arr = ft_rotate_a(arr);
 		else
-			arr = ft_reverse(arr, 'a');
-		arr = ft_sorting(arr);
+			arr = ft_reverse_a(arr);
+		i++;
 	}
 	return (arr);
 }
 
 t_arr	is_min(t_arr arr)
 {
-	t_list	*current;
+	int	i;
 
-	current = arr.array_a;
-	arr.min = arr.array_a;
-	while (current->next)
+	i = 0;
+	arr.min = arr.array_a[i];
+	arr.min_pos = i;
+	while (i < arr.size_a)
 	{
-		if (*((int *)current->content) < *((int *)arr.min->content))
-			arr.min = current;
-		current = current->next;
+		if (arr.array_a[i] < arr.min)
+		{
+			arr.min = arr.array_a[i];
+			arr.min_pos = i;
+		}
+		i++;
 	}
-	if (*((int *)current->content) < *((int *)arr.min->content))
-		arr.min = current;
 	return (arr);
 }

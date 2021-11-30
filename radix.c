@@ -1,86 +1,91 @@
 #include "push_swap.h"
-#include <stdio.h>
-static t_arr	ft_convert_binary(t_arr arr);
-
 static t_arr	ft_sort_array(t_arr arr);
+
+static t_arr	ft_sorted_array(t_arr arr);
+
+static t_arr	ft_get_pos(t_arr arr);
 
 t_arr	ft_radix(t_arr arr)
 {
-	t_list	*copy;
-
-	copy = arr.array_a;
-	arr.binary = ft_calloc(ft_lstsize(arr.array_a) * sizeof(char *) + 1, 1);
-	arr = ft_convert_binary(arr);
+	arr = ft_sorted_array(arr);
+	arr = ft_get_pos(arr);
+	arr.max = is_max(arr);
 	arr = ft_sort_array(arr);
 	return (arr);
 }
 
-static t_arr	ft_convert_binary(t_arr arr)
+static t_arr	ft_sort_array(t_arr arr)
 {
-	t_list	*copy;
 	int		i;
+	int		power;
+	int		exp;
 
-	copy = arr.array_a;
-	arr.max = is_max(arr);
-	arr.max_len = ft_numlen(*((int *)arr.max->content));
 	i = 0;
-	while (i < ft_lstsize(arr.array_a))
+	exp = 0;
+	power = ft_numlen(arr.max);
+	while (exp < power)
 	{
-		arr.binary[i] = ft_numcpy_bin(*((int *)copy->content), arr);
-		printf("%s\n", arr.binary[i]);
-		copy = copy->next;
-		i++;
+		arr = ft_get_pos(arr);
+		while (i < arr.size)
+		{
+			if ((arr.sorted_pos[i] & (1 << exp)) == 0)
+				arr = ft_push_b(arr);
+			else
+				arr = ft_rotate_a(arr);
+			i++;
+		}
+		while (arr.size_b > 0)
+			arr = ft_push_a(arr);
+		i = 0;
+		exp++;
 	}
 	return (arr);
 }
 
-char	*ft_numcpy_bin(int n, t_arr arr)
+static t_arr	ft_sorted_array(t_arr arr)
 {
-	int		len;
-	long	nbr;
-	char	*str;
+	int	i;
+	int	swap;
+	int	temp;
 
-	len = is_max_bin(arr);
-	nbr = n;
-	str = ft_calloc(len * sizeof(char) + 1, 1);
-	while (nbr > 0)
+	i = 0;
+	swap = 1;
+	while (swap != 0)
 	{
-		len--;
-		str[len] = nbr % 2 + '0';
-		nbr /= 2;
+		swap = 0;
+		while (i < arr.size - 1)
+		{
+			if (arr.sorted_array[i] > arr.sorted_array[i + 1])
+			{
+				swap++;
+				temp = arr.sorted_array[i];
+				arr.sorted_array[i] = arr.sorted_array[i + 1];
+				arr.sorted_array[i + 1] = temp;
+			}
+			i++;
+		}
+		i = 0;
 	}
-	while (len > 0)
-	{
-		len--;
-		str[len] = '0';
-	}
-	return (str);
+	return (arr);
 }
 
-static t_arr	ft_sort_array(t_arr arr)
+static t_arr	ft_get_pos(t_arr arr)
 {
-	t_list	*copy;
 	int		i;
 	int		j;
 
-	copy = arr.array_a;
 	i = 0;
-	j = arr.max_len - 1;
-	while (j >= 0)
+	j = 0;
+	while (j < arr.size)
 	{
 		while (i < arr.size)
 		{
-			if (arr.binary[i][j] == '0')
-				arr = ft_push(arr, 'b');
-			else
-				arr = ft_rotate(arr, 'a');
+			if (arr.sorted_array[i] == arr.array_a[j])
+				arr.sorted_pos[j] = i;
 			i++;
 		}
-		while (arr.array_b)
-			arr = ft_push(arr, 'a');
-		arr = ft_convert_binary(arr);
-		j--;
 		i = 0;
+		j++;
 	}
 	return (arr);
 }
